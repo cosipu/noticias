@@ -69,6 +69,14 @@ async function crearHilo(event) {
     return;
   }
   
+  // Detectar modo estático
+  const isStaticMode = !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1');
+  
+  if (isStaticMode) {
+    mostrarError('Demo estática: No es posible crear hilos en modo demostración. Requiere backend.');
+    return;
+  }
+  
   try {
     const sessionId = getSessionId();
     
@@ -91,10 +99,19 @@ async function crearHilo(event) {
     mostrarExito('Hilo creado exitosamente');
     ocultarFormularioNuevoHilo();
     
-    // Redirigir al hilo
-    setTimeout(() => {
-      window.location.href = `/hilo/${hilo.id}`;
-    }, 1000);
+    // Detectar modo estático
+    const isStaticMode = !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1');
+    
+    // Redirigir al hilo (solo si hay backend)
+    if (!isStaticMode) {
+      setTimeout(() => {
+        window.location.href = `hilo.html?id=${hilo.id}`;
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        cargarHilos(); // Recargar lista de hilos
+      }, 1000);
+    }
     
   } catch (err) {
     mostrarError('Error al crear hilo: ' + err.message);
@@ -116,7 +133,15 @@ function ocultarFormularioNuevoHilo() {
 
 // Ir a hilo
 function irAHilo(id) {
-  window.location.href = `/hilo/${id}`;
+  // Detectar modo estático (GitHub Pages)
+  const isStaticMode = !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1');
+  
+  if (isStaticMode) {
+    alert('Demo estática: Los hilos individuales requieren backend. Esta es una demostración de datos.');
+    return;
+  }
+  
+  window.location.href = `hilo.html?id=${id}`;
 }
 
 // Truncar texto

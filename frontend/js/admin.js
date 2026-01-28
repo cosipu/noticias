@@ -391,7 +391,7 @@ async function cargarHilosModeracion() {
             <p>${escapeHTML(hilo.contenido).substring(0, 200)}...</p>
           </div>
           <div class="admin-item-actions">
-            <a href="/hilo/${hilo.id}" class="btn btn-small" target="_blank">Ver</a>
+            <a href="hilo.html?id=${hilo.id}" class="btn btn-small" target="_blank">Ver</a>
             ${!hilo.archivado ? `<button class="btn btn-small" data-action="archivar-hilo" data-id="${hilo.id}">Archivar</button>` : ''}
             <button class="btn btn-small btn-danger" data-action="eliminar-hilo" data-id="${hilo.id}">Eliminar</button>
           </div>

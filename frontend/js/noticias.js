@@ -30,7 +30,7 @@ async function cargarNoticias() {
           <div class="news-card-content">
             <span class="news-card-category">${(noticia.categoria || 'POLÍTICA').toUpperCase()}</span>
             <h3 class="news-card-title">
-              <a href="/noticia/${noticia.slug || noticia.id}">${escapeHTML(noticia.titulo)}</a>
+              <a href="#" onclick="alert('Demo estática. Páginas individuales requieren backend.'); return false;">${escapeHTML(noticia.titulo)}</a>
             </h3>
             <p class="news-card-excerpt">${escapeHTML(noticia.resumen || noticia.bajada || '')}</p>
             <div class="news-card-meta">
@@ -72,7 +72,7 @@ async function cargarTrendingSidebar() {
     
     if (data.noticias && data.noticias.length > 0) {
       trendingList.innerHTML = data.noticias.map(noticia => `
-        <li><a href="/noticia/${noticia.slug || noticia.id}">${escapeHTML(noticia.titulo)}</a></li>
+        <li><a href="#" onclick="alert('Demo estática. Páginas individuales requieren backend.'); return false;">${escapeHTML(noticia.titulo)}</a></li>
       `).join('');
     }
   } catch (error) {

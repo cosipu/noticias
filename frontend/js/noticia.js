@@ -59,7 +59,7 @@ async function cargarNoticia() {
         <hr style="margin: 2rem 0;">
         
         <div style="text-align: center; padding: 2rem 0;">
-          <a href="/noticias" class="btn">← Ver más noticias</a>
+          <a href="noticias.html" class="btn">← Ver más noticias</a>
         </div>
       </div>
     `;
@@ -100,7 +100,7 @@ async function cargarComentarios(noticiaId) {
         <div class="comment-form">
           <h3>Compartir opinión</h3>
           <p style="margin-bottom: 1rem; color: var(--color-text-light);">Únete a la discusión en nuestro foro comunitario</p>
-          <a href="/foro" class="btn">Ir al foro →</a>
+          <a href="foro.html" class="btn">Ir al foro →</a>
         </div>
         
         <div id="comments-list" style="margin-top: 2rem;">
