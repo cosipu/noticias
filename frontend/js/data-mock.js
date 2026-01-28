@@ -183,3 +183,57 @@ function getMockStats() {
     usuarios: 1
   };
 }
+
+// Datos de ejemplo para hilos del foro
+const MOCK_HILOS = [
+  {
+    id: 1,
+    titulo: "¿Qué esperar del nuevo gobierno?",
+    contenido: "Cuáles creen que serán los cambios más importantes en estos primeros 100 días...",
+    autor_id: "usuario_123",
+    fecha_creacion: new Date().toISOString(),
+    respuestas_count: 12,
+    archivado: false
+  },
+  {
+    id: 2,
+    titulo: "Impacto económico esperado",
+    contenido: "Análisis sobre cómo las nuevas políticas afectarán a la economía personal...",
+    autor_id: "usuario_456",
+    fecha_creacion: new Date(Date.now() - 86400000).toISOString(),
+    respuestas_count: 8,
+    archivado: false
+  },
+  {
+    id: 3,
+    titulo: "Reforma educativa - opiniones",
+    contenido: "¿Crees que los cambios en educación serán positivos?...",
+    autor_id: "usuario_789",
+    fecha_creacion: new Date(Date.now() - 172800000).toISOString(),
+    respuestas_count: 15,
+    archivado: false
+  },
+  {
+    id: 4,
+    titulo: "Seguridad ciudadana: ¿mejorará?",
+    contenido: "Perspectivas sobre las nuevas medidas de seguridad...",
+    autor_id: "usuario_101",
+    fecha_creacion: new Date(Date.now() - 259200000).toISOString(),
+    respuestas_count: 5,
+    archivado: false
+  }
+];
+
+// Función para obtener hilos del foro
+function getMockHilos(options = {}) {
+  const { limit = 50, skip = 0 } = options;
+  
+  let hilos = [...MOCK_HILOS];
+  hilos.sort((a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion));
+  hilos = hilos.slice(skip, skip + limit);
+  
+  return {
+    hilos,
+    total: MOCK_HILOS.length
+  };
+}

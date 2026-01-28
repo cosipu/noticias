@@ -3,8 +3,19 @@
 let currentTab = 'noticias';
 let editingNoticiaId = null;
 
+// Detectar modo estático (fallback si no se define en main.js)
+if (typeof isStaticMode === 'undefined') {
+  const isStaticMode = !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1');
+}
+
 // Verificar autenticación al cargar
 document.addEventListener('DOMContentLoaded', () => {
+  // En modo estático, mostrar demo del admin
+  if (isStaticMode) {
+    mostrarDemoAdmin();
+    return;
+  }
+  
   verificarAuth();
   
   // Event listener para el formulario de login
@@ -46,6 +57,43 @@ document.addEventListener('DOMContentLoaded', () => {
     formGuardarNoticia.addEventListener('submit', guardarNoticia);
   }
 });
+
+// Mostrar demo del admin en modo estático
+function mostrarDemoAdmin() {
+  const loginScreen = document.getElementById('login-screen');
+  const adminPanel = document.getElementById('admin-panel');
+  
+  if (loginScreen) {
+    loginScreen.style.display = 'none';
+  }
+  
+  if (adminPanel) {
+    adminPanel.style.display = 'block';
+    
+    // Agregar banner de demo
+    const banner = document.createElement('div');
+    banner.style.cssText = `
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      color: #856404;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 4px;
+      text-align: center;
+      font-weight: bold;
+    `;
+    banner.innerHTML = '📌 MODO DEMOSTRACIÓN (Sin Backend) - Las funciones de edición/eliminación no funcionan en GitHub Pages';
+    
+    const adminContainer = document.querySelector('.admin-container') || adminPanel.querySelector('main');
+    if (adminContainer) {
+      adminContainer.insertBefore(banner, adminContainer.firstChild);
+    }
+    
+    // Cargar datos de demo
+    cargarNoticias();
+    cargarHilosModeracion();
+  }
+}
 
 // Verificar si el usuario está autenticado
 async function verificarAuth() {

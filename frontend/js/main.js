@@ -55,6 +55,11 @@ function fetchMockData(endpoint) {
         const sort = params.get('sort') || 'fecha';
         
         resolve(getMockNoticias({ limit, skip, sort }));
+      } else if (path.includes('/foro/hilos')) {
+        const limit = parseInt(params.get('limit')) || 50;
+        const skip = parseInt(params.get('skip')) || 0;
+        
+        resolve(getMockHilos({ limit, skip }));
       } else {
         resolve({ error: 'Endpoint no encontrado' });
       }
