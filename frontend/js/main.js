@@ -33,8 +33,44 @@ async function fetchAPI(endpoint, options = {}) {
   }
 }
 
-// Cargar noticias destacadas en la home
-async function loadFeaturedNews() {
+// Cargar noticia principal (hero) en la home
+async function loadHeroNews() {
+  try {
+    const data = await fetchAPI('/noticias?limit=1');
+    
+    if (data.noticias && data.noticias.length > 0) {
+      const noticia = data.noticias[0];
+      
+      const heroTitle = document.getElementById('hero-title');
+      const heroImage = document.getElementById('hero-image');
+      const heroExcerpt = document.getElementById('hero-excerpt');
+      const heroDate = document.getElementById('hero-date');
+      const heroAuthor = document.getElementById('hero-author-name');
+      const heroCategory = document.getElementById('hero-category');
+      const heroLink = document.getElementById('hero-link');
+      
+      if (heroTitle) heroTitle.textContent = escapeHTML(noticia.titulo);
+      if (heroImage) heroImage.src = noticia.imagen_url || '/images/placeholder.svg';
+      if (heroImage) heroImage.alt = escapeHTML(noticia.titulo);
+      if (heroExcerpt) heroExcerpt.textContent = escapeHTML(noticia.resumen || noticia.bajada || 'Noticia destacada');
+      if (heroDate) heroDate.textContent = formatDate(noticia.fecha_creacion);
+      if (heroAuthor) heroAuthor.textContent = noticia.autor || 'Redacción';
+      if (heroCategory) heroCategory.textContent = (noticia.categoria || 'POLÍTICA').toUpperCase();
+      if (heroLink) heroLink.href = `/noticia/${noticia.slug || noticia.id}`;
+      
+      // Mostrar autor si existe
+      const heroAuthorDiv = document.getElementById('hero-author');
+      if (noticia.autor && heroAuthorDiv) {
+        heroAuthorDiv.style.display = 'inline-flex';
+      }
+    }
+  } catch (err) {
+    console.error('Error al cargar noticia hero:', err);
+  }
+}
+
+// Cargar noticias secundarias en grid
+async function loadSecondaryNews() {
   const loading = document.getElementById('loading');
   const error = document.getElementById('error');
   const grid = document.getElementById('news-grid');
@@ -42,30 +78,79 @@ async function loadFeaturedNews() {
   if (!grid) return;
   
   try {
-    const data = await fetchAPI('/noticias?limit=6');
+    const data = await fetchAPI('/noticias?limit=9&skip=1');
     
-    loading.style.display = 'none';
+    if (loading) loading.style.display = 'none';
     
     if (data.noticias && data.noticias.length > 0) {
       grid.innerHTML = data.noticias.map(noticia => `
-        <div class="card">
-          ${noticia.imagen_url ? `<img src="${noticia.imagen_url}" alt="${noticia.titulo}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 4px; margin-bottom: 1rem;">` : ''}
-          <div class="card-meta">
-            <span>${noticia.categoria}</span> • 
-            <span>${formatDate(noticia.fecha_creacion)}</span>
+        <article class="news-card">
+          ${noticia.imagen_url ? `<img src="${noticia.imagen_url}" alt="${escapeHTML(noticia.titulo)}" class="news-card-image">` : ''}
+          <div class="news-card-content">
+            <span class="news-card-category">${(noticia.categoria || 'POLÍTICA').toUpperCase()}</span>
+            <h3 class="news-card-title">
+              <a href="/noticia/${noticia.slug || noticia.id}">${escapeHTML(noticia.titulo)}</a>
+            </h3>
+            <p class="news-card-excerpt">${escapeHTML(noticia.resumen || noticia.bajada || '')}</p>
+            <div class="news-card-meta">
+              <span>${formatDate(noticia.fecha_creacion)}</span>
+              <span>${noticia.numero_comentarios || 0} 💬</span>
+            </div>
           </div>
-          <h3>${escapeHTML(noticia.titulo)}</h3>
-          <p>${escapeHTML(noticia.resumen)}</p>
-          <a href="/noticia/${noticia.slug || noticia.id}" class="btn btn-small mt-2">Leer más →</a>
-        </div>
+        </article>
       `).join('');
     } else {
       grid.innerHTML = '<p class="text-center">No hay noticias disponibles</p>';
     }
   } catch (err) {
-    loading.style.display = 'none';
-    error.style.display = 'block';
-    error.textContent = 'Error al cargar noticias: ' + err.message;
+    if (loading) loading.style.display = 'none';
+    if (error) {
+      error.style.display = 'block';
+      error.textContent = 'Error al cargar noticias: ' + err.message;
+    }
+    console.error('Error al cargar noticias:', err);
+  }
+}
+
+// Cargar trending (noticias más comentadas)
+async function loadTrendingNews() {
+  try {
+    const data = await fetchAPI('/noticias?limit=5&sort=comentarios');
+    const trendingList = document.getElementById('trending-list');
+    
+    if (!trendingList) return;
+    
+    if (data.noticias && data.noticias.length > 0) {
+      trendingList.innerHTML = data.noticias.map(noticia => `
+        <li><a href="/noticia/${noticia.slug || noticia.id}">${escapeHTML(noticia.titulo)}</a></li>
+      `).join('');
+    }
+  } catch (err) {
+    console.error('Error al cargar trending:', err);
+  }
+}
+
+// Actualizar estadísticas
+async function updateStats() {
+  try {
+    const data = await fetchAPI('/noticias?limit=1000');
+    
+    if (data.noticias) {
+      const newsCount = document.getElementById('news-count');
+      const commentCount = document.getElementById('comment-count');
+      
+      if (newsCount) newsCount.textContent = data.noticias.length;
+      
+      // Contar comentarios totales
+      let totalComments = 0;
+      data.noticias.forEach(n => {
+        totalComments += (n.numero_comentarios || 0);
+      });
+      
+      if (commentCount) commentCount.textContent = totalComments;
+    }
+  } catch (err) {
+    console.error('Error al actualizar estadísticas:', err);
   }
 }
 
@@ -121,8 +206,11 @@ function toggleDarkMode() {
 document.addEventListener('DOMContentLoaded', () => {
   initDarkMode();
   
-  // Cargar noticias si estamos en la home
+  // Cargar contenido de la home si estamos en ella
   if (document.getElementById('news-grid')) {
-    loadFeaturedNews();
+    loadHeroNews();      // Cargar noticia principal
+    loadSecondaryNews(); // Cargar grid de noticias
+    loadTrendingNews();  // Cargar trending
+    updateStats();       // Actualizar estadísticas
   }
 });

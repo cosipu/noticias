@@ -3,21 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Foro Anónimo</title>
+  <meta name="description" content="Foro comunitario anónimo y seguro para discutir noticias">
+  <title>Comunidad - Foro de Comentarios</title>
   <link rel="stylesheet" href="/css/styles.css">
-  <link rel="stylesheet" href="/css/foro.css">
 </head>
 <body>
   <header>
     <div class="container">
-      <h1>📰 Noticias del Gobierno</h1>
+      <h1>
+        📰 NOTICIAS POLÍTICA
+        <span class="subtitle">Información Ciudadana Independiente</span>
+      </h1>
       <nav>
         <ul>
           <li><a href="/">Inicio</a></li>
           <li><a href="/noticias">Noticias</a></li>
-          <li><a href="/foro">Foro</a></li>
-          <li><a href="/reglas">Reglas</a></li>
-          <li><a href="/acerca">Acerca</a></li>
+          <li><a href="/foro">Comunidad</a></li>
+          <li><a href="/admin">Admin</a></li>
         </ul>
       </nav>
     </div>
@@ -25,60 +27,142 @@
 
   <main>
     <div class="container">
-      <div class="foro-header">
-        <h2>💬 Foro Anónimo</h2>
-        <div class="foro-controls">
-          <select id="ordenar">
-            <option value="recientes">Más recientes</option>
-            <option value="activos">Más activos</option>
-          </select>
-          <button class="btn" onclick="mostrarFormularioNuevoHilo()">+ Crear Hilo</button>
+      <div class="main-content">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h1 style="font-size: 2.2rem; text-transform: uppercase; letter-spacing: 1px;">
+              💬 Comunidad
+            </h1>
+            <button class="btn" id="btn-nuevo-hilo" style="margin: 0;">
+              + Nuevo Tema
+            </button>
+          </div>
+
+          <!-- Controles -->
+          <div style="margin-bottom: 2rem;">
+            <label for="ordenar" style="margin-right: 1rem; font-weight: 600;">Ordenar:</label>
+            <select id="ordenar" style="padding: 0.5rem; border-radius: var(--radius); border: 1px solid var(--color-border);">
+              <option value="recientes">Más recientes</option>
+              <option value="activos">Más activos</option>
+              <option value="comentarios">Más comentados</option>
+            </select>
+          </div>
+
+          <!-- Formulario para crear nuevo hilo -->
+          <div id="nuevo-hilo-form" class="comment-form" style="display: none; margin-bottom: 2rem;">
+            <h3>Iniciar nuevo tema</h3>
+            <form onsubmit="crearHilo(event)">
+              <div class="form-group">
+                <label for="hilo-titulo">Título del tema</label>
+                <input type="text" id="hilo-titulo" placeholder="¿Cuál es tu opinión?" required maxlength="255">
+              </div>
+              <div class="form-group">
+                <label for="hilo-contenido">Tu mensaje</label>
+                <textarea id="hilo-contenido" placeholder="Expresa tu pensamiento de manera respetuosa..." required maxlength="2000" rows="5"></textarea>
+                <small style="display: block; margin-top: 0.5rem; color: var(--color-text-light);">
+                  <span id="char-count">0</span>/2000 caracteres
+                </small>
+              </div>
+              <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                  <input type="checkbox" id="captcha" required>
+                  Confirmo que soy humano y acepto las reglas de la comunidad
+                </label>
+              </div>
+              <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn">Publicar tema</button>
+                <button type="button" id="btn-cancelar-hilo" class="btn" style="background: var(--color-text-light);">
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div id="loading" class="loading">Cargando temas...</div>
+          <div id="error" class="error" style="display: none;"></div>
+          <div id="success" class="success" style="display: none;"></div>
+
+          <!-- Lista de hilos -->
+          <div id="hilos-list"></div>
         </div>
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+          <!-- Widget: Información -->
+          <div class="sidebar-widget">
+            <h3>ℹ️ Sobre la Comunidad</h3>
+            <p style="color: var(--color-text-light); line-height: 1.6;">
+              Espacio seguro y anónimo para discutir temas de interés público. Todos los usuarios son anónimos.
+            </p>
+          </div>
+
+          <!-- Widget: Reglas -->
+          <div class="sidebar-widget">
+            <h3>📋 Reglas</h3>
+            <ul style="font-size: 0.9rem;">
+              <li>✅ Respeta a otros usuarios</li>
+              <li>✅ No hagas spam</li>
+              <li>✅ No incluyas información personal</li>
+              <li>✅ Mantén el tema en discusión</li>
+            </ul>
+          </div>
+
+          <!-- Widget: Estadísticas -->
+          <div class="sidebar-widget">
+            <h3>📊 Actividad</h3>
+            <ul>
+              <li><strong id="total-threads">0</strong> temas</li>
+              <li><strong id="total-replies">0</strong> mensajes</li>
+              <li><strong>Ahora:</strong> activo</li>
+            </ul>
+          </div>
+
+          <!-- Widget: Acciones -->
+          <div class="sidebar-widget">
+            <h3>Ir a</h3>
+            <ul>
+              <li><a href="/">🏠 Inicio</a></li>
+              <li><a href="/noticias">📰 Noticias</a></li>
+              <li><a href="/admin">⚙️ Administración</a></li>
+            </ul>
+          </div>
+        </aside>
       </div>
-
-      <!-- Formulario para crear nuevo hilo -->
-      <div id="nuevo-hilo-form" class="form-container" style="display: none;">
-        <h3>Crear Nuevo Hilo</h3>
-        <form onsubmit="crearHilo(event)">
-          <div class="form-group">
-            <label>Título</label>
-            <input type="text" id="hilo-titulo" required maxlength="255">
-          </div>
-          <div class="form-group">
-            <label>Contenido</label>
-            <textarea id="hilo-contenido" required maxlength="2000"></textarea>
-            <small><span id="char-count">0</span>/2000 caracteres</small>
-          </div>
-          <div class="form-group">
-            <label>
-              <input type="checkbox" id="captcha" required>
-              No soy un robot
-            </label>
-          </div>
-          <button type="submit" class="btn">Publicar Hilo</button>
-          <button type="button" class="btn btn-secondary" onclick="ocultarFormularioNuevoHilo()">Cancelar</button>
-        </form>
-      </div>
-
-      <div id="loading" class="loading">Cargando hilos...</div>
-      <div id="error" class="error" style="display: none;"></div>
-      <div id="success" class="success" style="display: none;"></div>
-
-      <!-- Lista de hilos -->
-      <div id="hilos-list"></div>
     </div>
   </main>
 
   <footer>
     <div class="container">
-      <p>&copy; 2025 - Medio Informativo</p>
-      <p style="opacity: 0.7; margin-top: 0.5rem;">
-        <a href="/reglas" style="color: white;">Leer las reglas del foro</a>
-      </p>
+      <div>
+        <h3>Sobre nosotros</h3>
+        <ul>
+          <li><a href="#">¿Quiénes somos?</a></li>
+          <li><a href="#">Nuestra misión</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Comunidad</h3>
+        <ul>
+          <li><a href="#">Reglas del foro</a></li>
+          <li><a href="#">Reportar abuso</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Sitio</h3>
+        <ul>
+          <li><a href="/noticias">Noticias</a></li>
+          <li><a href="#">Política de privacidad</a></li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 - Medio Informativo Ciudadano. Comunidad anónima y segura.</p>
+      </div>
     </div>
   </footer>
 
   <script src="/js/main.js"></script>
   <script src="/js/foro.js"></script>
+</body>
+</html>
 </body>
 </html>

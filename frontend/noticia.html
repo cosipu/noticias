@@ -3,39 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Noticia</title>
+  <meta name="description" id="meta-description" content="Noticia de política">
+  <title id="page-title">Noticia - Noticias Política</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
   <header>
     <div class="container">
-      <h1>📰 Noticias del Gobierno</h1>
+      <h1>
+        📰 NOTICIAS POLÍTICA
+        <span class="subtitle">Información Ciudadana Independiente</span>
+      </h1>
       <nav>
         <ul>
           <li><a href="/">Inicio</a></li>
           <li><a href="/noticias">Noticias</a></li>
-          <li><a href="/foro">Foro</a></li>
-          <li><a href="/reglas">Reglas</a></li>
-          <li><a href="/acerca">Acerca</a></li>
+          <li><a href="/foro">Comunidad</a></li>
+          <li><a href="/admin">Admin</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <main>
-    <div class="container" style="max-width: 800px;">
-      <a href="/noticias" class="btn btn-secondary mb-3">← Volver a noticias</a>
+    <div class="container">
+      <a href="/noticias" class="btn">← Volver a noticias</a>
       
       <div id="loading" class="loading">Cargando noticia...</div>
       <div id="error" class="error" style="display: none;"></div>
       
-      <article id="noticia-container"></article>
+      <article id="noticia-container" class="article-page"></article>
     </div>
   </main>
 
   <footer>
     <div class="container">
-      <p>&copy; 2025 - Medio Informativo</p>
+      <div>
+        <h3>Sobre nosotros</h3>
+        <ul>
+          <li><a href="#acerca">¿Quiénes somos?</a></li>
+          <li><a href="#mision">Nuestra misión</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Contacto</h3>
+        <ul>
+          <li><a href="mailto:info@noticias.local">info@noticias.local</a></li>
+          <li><a href="#">Redes sociales</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Sitio</h3>
+        <ul>
+          <li><a href="/noticias">Archivo</a></li>
+          <li><a href="/foro">Comunidad</a></li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 - Medio Informativo Ciudadano. Información independiente y verificada.</p>
+      </div>
     </div>
   </footer>
 

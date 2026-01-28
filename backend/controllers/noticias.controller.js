@@ -39,12 +39,25 @@ export const getNoticiaById = async (req, res) => {
   try {
     const { id } = req.params;
     
-    const queryText = `
-      SELECT * FROM noticias
-      WHERE (id = $1 OR slug = $1) AND publicada = true
-    `;
+    // Detectar si es un ID numérico o un slug
+    const isNumericId = /^\d+$/.test(id);
     
-    const result = await query(queryText, [id]);
+    let queryText, params;
+    if (isNumericId) {
+      queryText = `
+        SELECT * FROM noticias
+        WHERE id = $1 AND publicada = true
+      `;
+      params = [parseInt(id)];
+    } else {
+      queryText = `
+        SELECT * FROM noticias
+        WHERE slug = $1 AND publicada = true
+      `;
+      params = [id];
+    }
+    
+    const result = await query(queryText, params);
     
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Noticia no encontrada' });

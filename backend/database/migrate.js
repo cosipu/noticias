@@ -3,16 +3,21 @@ import { query } from '../config/database.js';
 // Script de migración - Crear todas las tablas
 
 const migrations = [
-  // Tabla de noticias
+  // Tabla de noticias mejorada
   `CREATE TABLE IF NOT EXISTS noticias (
     id SERIAL PRIMARY KEY,
     titulo VARCHAR(255) NOT NULL,
+    bajada VARCHAR(500),
     resumen TEXT NOT NULL,
     contenido TEXT NOT NULL,
     categoria VARCHAR(100) NOT NULL,
     imagen_url VARCHAR(500),
+    imagen_principal BOOLEAN DEFAULT false,
     slug VARCHAR(255) UNIQUE NOT NULL,
     publicada BOOLEAN DEFAULT false,
+    destacada BOOLEAN DEFAULT false,
+    autor VARCHAR(100),
+    numero_comentarios INTEGER DEFAULT 0,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )`,
@@ -21,6 +26,7 @@ const migrations = [
   `CREATE INDEX IF NOT EXISTS idx_noticias_categoria ON noticias(categoria)`,
   `CREATE INDEX IF NOT EXISTS idx_noticias_fecha ON noticias(fecha_creacion DESC)`,
   `CREATE INDEX IF NOT EXISTS idx_noticias_publicada ON noticias(publicada)`,
+  `CREATE INDEX IF NOT EXISTS idx_noticias_destacada ON noticias(destacada)`,
 
   // Tabla de hilos del foro
   `CREATE TABLE IF NOT EXISTS foro_hilos (
@@ -32,7 +38,7 @@ const migrations = [
     activo BOOLEAN DEFAULT true,
     archivado BOOLEAN DEFAULT false,
     sticky BOOLEAN DEFAULT false,
-    respuestas_count INTEGER DEFAULT 0,
+    comentarios_count INTEGER DEFAULT 0,
     ultima_actividad TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )`,
@@ -42,19 +48,22 @@ const migrations = [
   `CREATE INDEX IF NOT EXISTS idx_hilos_actividad ON foro_hilos(ultima_actividad DESC)`,
   `CREATE INDEX IF NOT EXISTS idx_hilos_archivado ON foro_hilos(archivado)`,
 
-  // Tabla de respuestas del foro
-  `CREATE TABLE IF NOT EXISTS foro_respuestas (
+  // Tabla de comentarios del foro (jerárquica)
+  `CREATE TABLE IF NOT EXISTS foro_comentarios (
     id SERIAL PRIMARY KEY,
     hilo_id INTEGER NOT NULL REFERENCES foro_hilos(id) ON DELETE CASCADE,
+    parent_id INTEGER REFERENCES foro_comentarios(id) ON DELETE CASCADE,
     contenido TEXT NOT NULL,
     autor_id VARCHAR(50) NOT NULL,
     ip_hash VARCHAR(64) NOT NULL,
+    likes INTEGER DEFAULT 0,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )`,
 
-  // Índices para respuestas
-  `CREATE INDEX IF NOT EXISTS idx_respuestas_hilo ON foro_respuestas(hilo_id)`,
-  `CREATE INDEX IF NOT EXISTS idx_respuestas_fecha ON foro_respuestas(fecha_creacion ASC)`,
+  // Índices para comentarios
+  `CREATE INDEX IF NOT EXISTS idx_comentarios_hilo ON foro_comentarios(hilo_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_comentarios_parent ON foro_comentarios(parent_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_comentarios_fecha ON foro_comentarios(fecha_creacion ASC)`,
 
   // Tabla de moderación (bloqueos temporales)
   `CREATE TABLE IF NOT EXISTS moderacion_bloqueos (
@@ -102,16 +111,16 @@ const migrations = [
   BEGIN
     UPDATE foro_hilos 
     SET ultima_actividad = CURRENT_TIMESTAMP,
-        respuestas_count = respuestas_count + 1
+        comentarios_count = comentarios_count + 1
     WHERE id = NEW.hilo_id;
     RETURN NEW;
   END;
   $$ LANGUAGE plpgsql`,
 
   // Trigger para actualizar actividad
-  `DROP TRIGGER IF EXISTS trigger_actividad_hilo ON foro_respuestas`,
+  `DROP TRIGGER IF EXISTS trigger_actividad_hilo ON foro_comentarios`,
   `CREATE TRIGGER trigger_actividad_hilo
-  AFTER INSERT ON foro_respuestas
+  AFTER INSERT ON foro_comentarios
   FOR EACH ROW
   EXECUTE FUNCTION actualizar_actividad_hilo()`
 ];

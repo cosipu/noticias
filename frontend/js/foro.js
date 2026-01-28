@@ -1,6 +1,6 @@
 // JavaScript para el foro anónimo
 
-let currentOrden = 'recientes';
+let currentForoOrden = 'recientes';
 
 // Cargar hilos
 async function cargarHilos() {
@@ -12,34 +12,34 @@ async function cargarHilos() {
     loading.style.display = 'block';
     error.style.display = 'none';
     
-    const data = await fetchAPI(`/foro/hilos?ordenar=${currentOrden}&limit=50`);
+    const data = await fetchAPI(`/foro/hilos?ordenar=${currentForoOrden}&limit=50`);
     
     loading.style.display = 'none';
     
     if (data.hilos && data.hilos.length > 0) {
       hilosList.innerHTML = data.hilos.map(hilo => `
-        <div class="hilo-card ${hilo.sticky ? 'sticky' : ''}" onclick="irAHilo(${hilo.id})">
-          <div class="hilo-header">
-            <div>
-              <h3 class="hilo-title">
-                ${hilo.sticky ? '📌 ' : ''}${escapeHTML(hilo.titulo)}
-              </h3>
-              <div class="hilo-meta">
-                <span class="anon-id">${escapeHTML(hilo.autor_id)}</span>
-                <span>📅 ${formatDate(hilo.fecha_creacion)}</span>
-                ${hilo.archivado ? '<span style="color: #e74c3c;">📁 Archivado</span>' : ''}
-              </div>
-            </div>
+        <div class="comment-item" style="cursor: pointer; margin-bottom: 1.5rem;" onclick="irAHilo(${hilo.id})">
+          <div class="comment-header">
+            <span class="comment-author">
+              ${hilo.sticky ? '📌 ' : ''}${escapeHTML(hilo.autor_id)}
+            </span>
+            <span class="comment-time">${formatDate(hilo.fecha_creacion)}</span>
           </div>
-          <div class="hilo-preview">${truncateText(escapeHTML(hilo.contenido), 200)}</div>
-          <div class="hilo-stats">
-            <span>💬 ${hilo.respuestas_count} respuestas</span>
-            <span>⏰ Última actividad: ${formatTimeAgo(hilo.ultima_actividad)}</span>
+          <h3 style="font-size: 1.1rem; margin: 0.5rem 0; color: var(--color-primary);">
+            ${escapeHTML(hilo.titulo)}
+          </h3>
+          <div class="comment-text">
+            ${truncateText(escapeHTML(hilo.contenido), 200)}
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 0.75rem; font-size: 0.9rem; color: var(--color-text-light);">
+            <span>💬 ${hilo.respuestas_count || 0} respuestas</span>
+            <span>⏰ ${formatTimeAgo(hilo.ultima_actividad || hilo.fecha_creacion)}</span>
+            ${hilo.archivado ? '<span style="color: var(--color-secondary);">🔒 Archivado</span>' : ''}
           </div>
         </div>
       `).join('');
     } else {
-      hilosList.innerHTML = '<p class="text-center">No hay hilos disponibles. ¡Sé el primero en crear uno!</p>';
+      hilosList.innerHTML = '<p class="text-center" style="padding: 2rem; color: var(--color-text-light);">No hay temas disponibles. ¡Sé el primero en crear uno!</p>';
     }
   } catch (err) {
     loading.style.display = 'none';
@@ -164,13 +164,48 @@ document.addEventListener('DOMContentLoaded', () => {
   const ordenar = document.getElementById('ordenar');
   if (ordenar) {
     ordenar.addEventListener('change', (e) => {
-      currentOrden = e.target.value;
+      currentForoOrden = e.target.value;
       cargarHilos();
     });
+  }
+  
+  // Event listeners para botones
+  const btnNuevoHilo = document.querySelector('button[id="btn-nuevo-hilo"]');
+  if (btnNuevoHilo) {
+    btnNuevoHilo.addEventListener('click', () => mostrarFormularioNuevoHilo());
+  }
+  
+  const btnCancelar = document.querySelector('button[id="btn-cancelar-hilo"]');
+  if (btnCancelar) {
+    btnCancelar.addEventListener('click', () => ocultarFormularioNuevoHilo());
   }
   
   // Cargar hilos
   if (document.getElementById('hilos-list')) {
     cargarHilos();
+    cargarEstadisticas();
   }
 });
+
+// Cargar estadísticas del foro
+async function cargarEstadisticas() {
+  try {
+    const data = await fetchAPI('/foro/hilos?limit=1000');
+    
+    if (data.hilos) {
+      const totalThreads = document.getElementById('total-threads');
+      const totalReplies = document.getElementById('total-replies');
+      
+      if (totalThreads) totalThreads.textContent = data.hilos.length;
+      
+      let totalComments = 0;
+      data.hilos.forEach(h => {
+        totalComments += (h.respuestas_count || 0);
+      });
+      
+      if (totalReplies) totalReplies.textContent = totalComments;
+    }
+  } catch (err) {
+    console.error('Error al cargar estadísticas del foro:', err);
+  }
+}

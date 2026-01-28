@@ -3,20 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Noticias</title>
+  <meta name="description" content="Todas las noticias de política y actualidad ciudadana">
+  <title>Todas las Noticias - Noticias Política</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
   <header>
     <div class="container">
-      <h1>📰 Noticias del Gobierno</h1>
+      <h1>
+        📰 NOTICIAS POLÍTICA
+        <span class="subtitle">Información Ciudadana Independiente</span>
+      </h1>
       <nav>
         <ul>
           <li><a href="/">Inicio</a></li>
           <li><a href="/noticias">Noticias</a></li>
-          <li><a href="/foro">Foro</a></li>
-          <li><a href="/reglas">Reglas</a></li>
-          <li><a href="/acerca">Acerca</a></li>
+          <li><a href="/foro">Comunidad</a></li>
+          <li><a href="/admin">Admin</a></li>
         </ul>
       </nav>
     </div>
@@ -24,24 +27,108 @@
 
   <main>
     <div class="container">
-      <h2 class="mb-3">Todas las Noticias</h2>
-      
-      <div class="filters mb-3">
-        <select id="categoria-filter">
-          <option value="">Todas las categorías</option>
-        </select>
+      <div class="main-content">
+        <div>
+          <h1 style="font-size: 2.5rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px;">
+            Todas las Noticias
+          </h1>
+          
+          <div style="margin-bottom: 2rem;">
+            <label for="categoria-filter" style="margin-right: 1rem; font-weight: 600;">Filtrar por:</label>
+            <select id="categoria-filter" style="padding: 0.5rem; border-radius: var(--radius); border: 1px solid var(--color-border);">
+              <option value="">Todas las categorías</option>
+              <option value="politica">📍 Política</option>
+              <option value="economia">💰 Economía</option>
+              <option value="sociedad">👥 Sociedad</option>
+              <option value="seguridad">🔒 Seguridad</option>
+              <option value="cultura">🎭 Cultura</option>
+            </select>
+          </div>
+          
+          <div id="loading" class="loading">Cargando noticias...</div>
+          <div id="error" class="error" style="display: none;"></div>
+          
+          <div class="news-grid" id="news-grid"></div>
+          
+          <div style="margin-top: 2rem; text-align: center;">
+            <button id="load-more" class="btn" style="display: none;">Cargar más noticias</button>
+          </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+          <!-- Widget: Categorías -->
+          <div class="sidebar-widget">
+            <h3>Categorías</h3>
+            <ul>
+              <li><a href="/noticias">📊 Todas las noticias</a></li>
+              <li><a href="/noticias?cat=politica">📍 Política</a></li>
+              <li><a href="/noticias?cat=economia">💰 Economía</a></li>
+              <li><a href="/noticias?cat=sociedad">👥 Sociedad</a></li>
+              <li><a href="/noticias?cat=seguridad">🔒 Seguridad</a></li>
+            </ul>
+          </div>
+
+          <!-- Widget: Trending -->
+          <div class="sidebar-widget">
+            <h3>Trending Ahora</h3>
+            <ul id="trending-sidebar">
+              <li><a href="#">Cargando trending...</a></li>
+            </ul>
+          </div>
+
+          <!-- Widget: Estadísticas -->
+          <div class="sidebar-widget">
+            <h3>📊 Estadísticas</h3>
+            <ul>
+              <li><strong id="total-noticias">0</strong> noticias publicadas</li>
+              <li><strong id="total-comentarios">0</strong> comentarios</li>
+            </ul>
+          </div>
+
+          <!-- Widget: Ir a -->
+          <div class="sidebar-widget">
+            <h3>Ir a</h3>
+            <ul>
+              <li><a href="/">🏠 Inicio</a></li>
+              <li><a href="/foro">💬 Foro comunitario</a></li>
+              <li><a href="/admin">⚙️ Administración</a></li>
+            </ul>
+          </div>
+        </aside>
       </div>
-      
-      <div id="loading" class="loading">Cargando noticias...</div>
-      <div id="error" class="error" style="display: none;"></div>
-      
-      <div class="news-grid" id="news-grid"></div>
     </div>
   </main>
 
   <footer>
     <div class="container">
-      <p>&copy; 2025 - Medio Informativo</p>
+      <div>
+        <h3>Sobre nosotros</h3>
+        <ul>
+          <li><a href="#">¿Quiénes somos?</a></li>
+          <li><a href="#">Nuestra misión</a></li>
+          <li><a href="#">Historia</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Contacto</h3>
+        <ul>
+          <li><a href="mailto:info@noticias.local">info@noticias.local</a></li>
+          <li><a href="#">Redes sociales</a></li>
+          <li><a href="#">Publicidad</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Sitio</h3>
+        <ul>
+          <li><a href="/noticias">Archivo</a></li>
+          <li><a href="/foro">Comunidad</a></li>
+          <li><a href="#">Política de privacidad</a></li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 - Medio Informativo Ciudadano. Información independiente y verificada.</p>
+      </div>
     </div>
   </footer>
 

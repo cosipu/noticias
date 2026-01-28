@@ -26,50 +26,94 @@ async function cargarNoticia() {
     
     loading.style.display = 'none';
     
+    // Actualizar meta tags
+    document.getElementById('meta-description').content = noticia.resumen || noticia.titulo;
+    document.getElementById('page-title').textContent = `${noticia.titulo} - Noticias Política`;
+    document.title = `${noticia.titulo} - Noticias Política`;
+    
+    // Renderizar contenido
+    const authorLine = noticia.autor ? `<span>Por <strong>${escapeHTML(noticia.autor)}</strong></span>` : '';
+    const imageHTML = noticia.imagen_url ? 
+      `<div style="margin-bottom: 2rem; border-radius: var(--radius); overflow: hidden;">
+         <img src="${noticia.imagen_url}" alt="${escapeHTML(noticia.titulo)}" style="width: 100%; height: auto; display: block;">
+       </div>` : '';
+    
     container.innerHTML = `
-      <div class="card">
-        ${noticia.imagen_url ? `<img src="${noticia.imagen_url}" alt="${noticia.titulo}" style="width: 100%; height: 400px; object-fit: cover; border-radius: 4px; margin-bottom: 2rem;">` : ''}
-        
-        <div class="card-meta mb-2">
-          <span style="background: var(--color-primary); color: white; padding: 0.25rem 0.75rem; border-radius: 3px;">${noticia.categoria}</span>
-          <span style="margin-left: 1rem;">${formatDate(noticia.fecha_creacion)}</span>
+      <div class="article-header">
+        <span class="hero-badge">${(noticia.categoria || 'POLÍTICA').toUpperCase()}</span>
+        <h1 class="article-title">${escapeHTML(noticia.titulo)}</h1>
+        <div class="article-meta">
+          ${authorLine}
+          <span>${formatDate(noticia.fecha_creacion)}</span>
+          <span>${noticia.numero_comentarios || 0} comentarios</span>
         </div>
+      </div>
+      
+      <div class="article-body">
+        ${imageHTML}
         
-        <h1 style="margin-bottom: 1rem; line-height: 1.3;">${escapeHTML(noticia.titulo)}</h1>
+        ${noticia.bajada ? `<p style="font-size: 1.2rem; font-style: italic; color: var(--color-text-light); margin-bottom: 2rem;"><strong>${escapeHTML(noticia.bajada)}</strong></p>` : ''}
         
-        <p style="font-size: 1.2rem; color: var(--color-text-light); margin-bottom: 2rem; line-height: 1.6;">
-          <strong>${escapeHTML(noticia.resumen)}</strong>
-        </p>
+        ${formatearContenido(noticia.contenido || noticia.resumen)}
         
-        <div style="line-height: 1.8; font-size: 1.05rem;">
-          ${formatearContenido(noticia.contenido)}
-        </div>
+        <hr style="margin: 2rem 0;">
         
-        <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--color-border);">
-        
-        <div style="text-align: center;">
-          <a href="/noticias" class="btn">Ver más noticias</a>
-          <a href="/foro" class="btn btn-secondary" style="margin-left: 1rem;">Discutir en el foro</a>
+        <div style="text-align: center; padding: 2rem 0;">
+          <a href="/noticias" class="btn">← Ver más noticias</a>
         </div>
       </div>
     `;
     
-    // Actualizar título de la página
-    document.title = `${noticia.titulo} - Noticias`;
+    // Cargar comentarios si existen
+    cargarComentarios(noticiaId);
     
   } catch (err) {
     loading.style.display = 'none';
     error.style.display = 'block';
     error.textContent = 'Error al cargar noticia: ' + err.message;
+    console.error('Error:', err);
   }
 }
 
 function formatearContenido(contenido) {
-  // Convertir saltos de línea en párrafos
+  if (!contenido) return '';
+  
+  // Convertir saltos de línea dobles en párrafos
   return contenido
     .split('\n\n')
+    .filter(p => p.trim())
     .map(parrafo => `<p>${escapeHTML(parrafo.trim())}</p>`)
     .join('');
+}
+
+// Cargar y mostrar comentarios del hilo
+async function cargarComentarios(noticiaId) {
+  try {
+    // Buscar si existe un hilo para esta noticia
+    // Por ahora, mostrar sección vacía
+    const container = document.getElementById('noticia-container');
+    
+    const commentsHTML = `
+      <section class="comments-section">
+        <h2 class="comments-title">💬 Comentarios de la comunidad</h2>
+        
+        <div class="comment-form">
+          <h3>Compartir opinión</h3>
+          <p style="margin-bottom: 1rem; color: var(--color-text-light);">Únete a la discusión en nuestro foro comunitario</p>
+          <a href="/foro" class="btn">Ir al foro →</a>
+        </div>
+        
+        <div id="comments-list" style="margin-top: 2rem;">
+          <p class="text-center" style="color: var(--color-text-light);">Los comentarios aparecerán aquí una vez estén disponibles</p>
+        </div>
+      </section>
+    `;
+    
+    container.insertAdjacentHTML('beforeend', commentsHTML);
+    
+  } catch (err) {
+    console.error('Error al cargar comentarios:', err);
+  }
 }
 
 function mostrarError(mensaje) {

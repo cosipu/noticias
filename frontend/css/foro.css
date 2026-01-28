@@ -1,53 +1,17 @@
-/* Estilos específicos del foro */
+/* Estilos específicos del foro - DEPRECATED
+   Todos los estilos están ahora en styles.css
+   Este archivo se mantiene por compatibilidad */
 
-.foro-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.foro-controls {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.foro-controls select {
-  padding: 0.5rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  background: var(--color-card);
-  color: var(--color-text);
-}
-
-/* Hilo card */
-.hilo-card {
-  background: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  transition: transform 0.2s;
-  cursor: pointer;
-}
-
-.hilo-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.hilo-card.sticky {
-  border-left: 4px solid var(--color-accent);
-  background: linear-gradient(to right, rgba(231, 76, 60, 0.05), var(--color-card));
-}
-
-.hilo-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+/* Los estilos de comentarios y foro se definen en styles.css:
+   - .comment-item
+   - .comment-form
+   - .comment-header
+   - .comment-text
+   - .comment-author
+   - .comment-time
+   - .comments-section
+   - .comments-list
+*/
   margin-bottom: 0.5rem;
 }
 
