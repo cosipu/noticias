@@ -1,0 +1,20 @@
+{
+  "name": "noticias",
+  "version": "1.0.0",
+  "description": "Medio de noticias con foro anónimo estilo 4chan",
+  "private": true,
+  "engines": {
+    "node": "18.x"
+  },
+  "scripts": {
+    "dev": "cd backend && npm run dev",
+    "start": "cd backend && npm start",
+    "db:migrate": "cd backend && npm run db:migrate",
+    "db:seed": "cd backend && npm run db:seed",
+    "build": "cd backend && npm install",
+    "postinstall": "cd backend && npm install"
+  },
+  "keywords": ["news", "forum", "anonymous"],
+  "author": "",
+  "license": "ISC"
+}

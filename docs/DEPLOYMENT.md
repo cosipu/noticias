@@ -46,7 +46,7 @@ Ya está incluido en el proyecto para optimizar el despliegue.
 2. Click en "New" → "GitHub Repo"
 3. Autorizar Railway a acceder a tu GitHub
 4. Seleccionar tu repositorio
-5. Railway detectará automáticamente que es Node.js
+5. Railway detectará automáticamente que es Node.js y leerá el `Procfile`
 
 ### 3.2 Configurar Variables de Entorno
 
@@ -68,12 +68,11 @@ node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 
 ### 3.3 Configurar Build y Start
 
-Railway debería detectar automáticamente los comandos del `package.json`:
+Railway ahora leerá el `Procfile` automáticamente:
+- **web**: Inicia el servidor en puerto 3000
+- **release**: Ejecuta migraciones automáticamente antes de desplegar
 
-- **Build Command**: `npm install`
-- **Start Command**: `npm start`
-
-Si no, configurar manualmente en "Settings" → "Build & Deploy"
+No requiere configuración manual en los settings. El `Procfile` se encarga de todo.
 
 ## 🔨 Paso 4: Ejecutar Migraciones
 
