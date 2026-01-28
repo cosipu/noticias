@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foro Anónimo</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/foro.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>📰 Noticias del Gobierno</h1>
+      <nav>
+        <ul>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/noticias">Noticias</a></li>
+          <li><a href="/foro">Foro</a></li>
+          <li><a href="/reglas">Reglas</a></li>
+          <li><a href="/acerca">Acerca</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="foro-header">
+        <h2>💬 Foro Anónimo</h2>
+        <div class="foro-controls">
+          <select id="ordenar">
+            <option value="recientes">Más recientes</option>
+            <option value="activos">Más activos</option>
+          </select>
+          <button class="btn" onclick="mostrarFormularioNuevoHilo()">+ Crear Hilo</button>
+        </div>
+      </div>
+
+      <!-- Formulario para crear nuevo hilo -->
+      <div id="nuevo-hilo-form" class="form-container" style="display: none;">
+        <h3>Crear Nuevo Hilo</h3>
+        <form onsubmit="crearHilo(event)">
+          <div class="form-group">
+            <label>Título</label>
+            <input type="text" id="hilo-titulo" required maxlength="255">
+          </div>
+          <div class="form-group">
+            <label>Contenido</label>
+            <textarea id="hilo-contenido" required maxlength="2000"></textarea>
+            <small><span id="char-count">0</span>/2000 caracteres</small>
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="captcha" required>
+              No soy un robot
+            </label>
+          </div>
+          <button type="submit" class="btn">Publicar Hilo</button>
+          <button type="button" class="btn btn-secondary" onclick="ocultarFormularioNuevoHilo()">Cancelar</button>
+        </form>
+      </div>
+
+      <div id="loading" class="loading">Cargando hilos...</div>
+      <div id="error" class="error" style="display: none;"></div>
+      <div id="success" class="success" style="display: none;"></div>
+
+      <!-- Lista de hilos -->
+      <div id="hilos-list"></div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 - Medio Informativo</p>
+      <p style="opacity: 0.7; margin-top: 0.5rem;">
+        <a href="/reglas" style="color: white;">Leer las reglas del foro</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/foro.js"></script>
+</body>
+</html>

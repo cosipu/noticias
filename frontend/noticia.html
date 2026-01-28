@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noticia</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>📰 Noticias del Gobierno</h1>
+      <nav>
+        <ul>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/noticias">Noticias</a></li>
+          <li><a href="/foro">Foro</a></li>
+          <li><a href="/reglas">Reglas</a></li>
+          <li><a href="/acerca">Acerca</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container" style="max-width: 800px;">
+      <a href="/noticias" class="btn btn-secondary mb-3">← Volver a noticias</a>
+      
+      <div id="loading" class="loading">Cargando noticia...</div>
+      <div id="error" class="error" style="display: none;"></div>
+      
+      <article id="noticia-container"></article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 - Medio Informativo</p>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/noticia.js"></script>
+</body>
+</html>

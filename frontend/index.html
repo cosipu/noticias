@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Medio informativo enfocado en el gobierno entrante">
+  <title>Noticias - Contador Gobierno</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>📰 Noticias del Gobierno</h1>
+      <nav>
+        <ul>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/noticias">Noticias</a></li>
+          <li><a href="/foro">Foro</a></li>
+          <li><a href="/reglas">Reglas</a></li>
+          <li><a href="/acerca">Acerca</a></li>
+          <li><a href="/admin">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero con contador regresivo -->
+  <section class="hero">
+    <div class="container">
+      <h2>Tiempo desde el inicio del gobierno</h2>
+      <p style="opacity: 0.9; margin-bottom: 1rem;">11 de marzo - Contador en tiempo real</p>
+      
+      <div class="countdown" id="countdown">
+        <div class="countdown-item">
+          <span class="countdown-value" id="years">0</span>
+          <span class="countdown-label">Años</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="months">0</span>
+          <span class="countdown-label">Meses</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="days">0</span>
+          <span class="countdown-label">Días</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="hours">0</span>
+          <span class="countdown-label">Horas</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="minutes">0</span>
+          <span class="countdown-label">Minutos</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="seconds">0</span>
+          <span class="countdown-label">Segundos</span>
+        </div>
+      </div>
+      
+      <p id="countdown-info" style="opacity: 0.8; margin-top: 1rem;"></p>
+    </div>
+  </section>
+
+  <!-- Noticias destacadas -->
+  <main>
+    <div class="container">
+      <h2 class="mb-3">Últimas Noticias</h2>
+      
+      <div id="loading" class="loading">Cargando noticias...</div>
+      <div id="error" class="error" style="display: none;"></div>
+      
+      <div class="news-grid" id="news-grid"></div>
+      
+      <div class="text-center mt-3">
+        <a href="/noticias" class="btn">Ver todas las noticias →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 - Medio Informativo</p>
+      <p style="opacity: 0.7; margin-top: 0.5rem;">Información ciudadana independiente</p>
+    </div>
+  </footer>
+
+  <script src="/js/countdown.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>
