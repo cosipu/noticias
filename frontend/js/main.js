@@ -79,13 +79,25 @@ async function loadHeroNews() {
       const heroLink = document.getElementById('hero-link');
       
       if (heroTitle) heroTitle.textContent = escapeHTML(noticia.titulo);
-      if (heroImage) heroImage.src = noticia.imagen_url || '/images/placeholder.svg';
+      if (heroImage) heroImage.src = noticia.imagen_url || 'frontend/images/placeholder.svg';
       if (heroImage) heroImage.alt = escapeHTML(noticia.titulo);
       if (heroExcerpt) heroExcerpt.textContent = escapeHTML(noticia.resumen || noticia.bajada || 'Noticia destacada');
       if (heroDate) heroDate.textContent = formatDate(noticia.fecha_creacion);
       if (heroAuthor) heroAuthor.textContent = noticia.autor || 'Redacción';
       if (heroCategory) heroCategory.textContent = (noticia.categoria || 'POLÍTICA').toUpperCase();
-      if (heroLink) heroLink.href = `/noticia/${noticia.slug || noticia.id}`;
+      
+      // En modo estático, deshabilitar link individual
+      if (heroLink) {
+        if (isStaticMode) {
+          heroLink.href = '#';
+          heroLink.onclick = (e) => {
+            e.preventDefault();
+            alert('Esta es una demo estática. Las páginas de noticias individuales requieren backend.');
+          };
+        } else {
+          heroLink.href = `/noticia/${noticia.slug || noticia.id}`;
+        }
+      }
       
       // Mostrar autor si existe
       const heroAuthorDiv = document.getElementById('hero-author');
@@ -118,12 +130,12 @@ async function loadSecondaryNews() {
           <div class="news-card-content">
             <span class="news-card-category">${(noticia.categoria || 'POLÍTICA').toUpperCase()}</span>
             <h3 class="news-card-title">
-              <a href="/noticia/${noticia.slug || noticia.id}">${escapeHTML(noticia.titulo)}</a>
+              <a href="#" onclick="alert('Demo estática. Páginas individuales requieren backend.'); return false;">${escapeHTML(noticia.titulo)}</a>
             </h3>
             <p class="news-card-excerpt">${escapeHTML(noticia.resumen || noticia.bajada || '')}</p>
             <div class="news-card-meta">
               <span>${formatDate(noticia.fecha_creacion)}</span>
-              <span>${noticia.numero_comentarios || 0} 💬</span>
+              <span>${noticia.comentarios_count || 0} 💬</span>
             </div>
           </div>
         </article>
@@ -151,7 +163,7 @@ async function loadTrendingNews() {
     
     if (data.noticias && data.noticias.length > 0) {
       trendingList.innerHTML = data.noticias.map(noticia => `
-        <li><a href="/noticia/${noticia.slug || noticia.id}">${escapeHTML(noticia.titulo)}</a></li>
+        <li><a href="#" onclick="alert('Demo estática. Páginas individuales requieren backend.'); return false;">${escapeHTML(noticia.titulo)}</a></li>
       `).join('');
     }
   } catch (err) {
