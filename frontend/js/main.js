@@ -2,8 +2,16 @@
 
 const API_URL = '/api';
 
+// Detectar si estamos en modo estático (GitHub Pages) o con backend
+const isStaticMode = !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1');
+
 // Función para hacer fetch con manejo de errores
 async function fetchAPI(endpoint, options = {}) {
+  // Si estamos en modo estático (GitHub Pages), usar datos mock
+  if (isStaticMode && typeof getMockNoticias !== 'undefined') {
+    return fetchMockData(endpoint);
+  }
+  
   try {
     const token = localStorage.getItem('authToken');
     
@@ -31,6 +39,27 @@ async function fetchAPI(endpoint, options = {}) {
     console.error('Error en fetchAPI:', error);
     throw error;
   }
+}
+
+// Función para simular datos cuando no hay backend
+function fetchMockData(endpoint) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      // Parsear endpoint y parámetros
+      const [path, queryString] = endpoint.split('?');
+      const params = new URLSearchParams(queryString);
+      
+      if (path.includes('/noticias')) {
+        const limit = parseInt(params.get('limit')) || 10;
+        const skip = parseInt(params.get('skip')) || 0;
+        const sort = params.get('sort') || 'fecha';
+        
+        resolve(getMockNoticias({ limit, skip, sort }));
+      } else {
+        resolve({ error: 'Endpoint no encontrado' });
+      }
+    }, 100); // Simular latencia de red
+  });
 }
 
 // Cargar noticia principal (hero) en la home
