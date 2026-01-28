@@ -157,5 +157,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
+  // Event listener para formulario de respuesta
+  const formCrearRespuesta = document.getElementById('form-crear-respuesta');
+  if (formCrearRespuesta) {
+    formCrearRespuesta.addEventListener('submit', crearRespuesta);
+  }
+  
   cargarHilo();
 });

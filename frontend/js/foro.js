@@ -18,7 +18,7 @@ async function cargarHilos() {
     
     if (data.hilos && data.hilos.length > 0) {
       hilosList.innerHTML = data.hilos.map(hilo => `
-        <div class="comment-item" style="cursor: pointer; margin-bottom: 1.5rem;" onclick="irAHilo(${hilo.id})">
+        <div class="comment-item hilo-item" data-hilo-id="${hilo.id}" style="cursor: pointer; margin-bottom: 1.5rem;">
           <div class="comment-header">
             <span class="comment-author">
               ${hilo.sticky ? '📌 ' : ''}${escapeHTML(hilo.autor_id)}
@@ -38,6 +38,14 @@ async function cargarHilos() {
           </div>
         </div>
       `).join('');
+      
+      // Agregar event listeners a cada hilo
+      document.querySelectorAll('.hilo-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const hiloId = item.getAttribute('data-hilo-id');
+          if (hiloId) irAHilo(hiloId);
+        });
+      });
     } else {
       hilosList.innerHTML = '<p class="text-center" style="padding: 2rem; color: var(--color-text-light);">No hay temas disponibles. ¡Sé el primero en crear uno!</p>';
     }
@@ -178,6 +186,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnCancelar = document.querySelector('button[id="btn-cancelar-hilo"]');
   if (btnCancelar) {
     btnCancelar.addEventListener('click', () => ocultarFormularioNuevoHilo());
+  }
+  
+  // Event listener para formulario de crear hilo
+  const formCrearHilo = document.getElementById('form-crear-hilo');
+  if (formCrearHilo) {
+    formCrearHilo.addEventListener('submit', crearHilo);
   }
   
   // Cargar hilos

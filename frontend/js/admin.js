@@ -6,6 +6,45 @@ let editingNoticiaId = null;
 // Verificar autenticación al cargar
 document.addEventListener('DOMContentLoaded', () => {
   verificarAuth();
+  
+  // Event listener para el formulario de login
+  const loginForm = document.getElementById('login-form');
+  if (loginForm) {
+    loginForm.addEventListener('submit', login);
+  }
+  
+  // Event listener para logout
+  const btnLogout = document.getElementById('btn-logout');
+  if (btnLogout) {
+    btnLogout.addEventListener('click', logout);
+  }
+  
+  // Event listeners para tabs
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.getAttribute('data-tab');
+      if (tab) cambiarTab(tab);
+    });
+  });
+  
+  // Event listener para nueva noticia
+  const btnNuevaNoticia = document.getElementById('btn-nueva-noticia');
+  if (btnNuevaNoticia) {
+    btnNuevaNoticia.addEventListener('click', mostrarFormularioNoticia);
+  }
+  
+  // Event listener para cancelar formulario noticia
+  const btnCancelarNoticia = document.getElementById('btn-cancelar-noticia');
+  if (btnCancelarNoticia) {
+    btnCancelarNoticia.addEventListener('click', cancelarFormulario);
+  }
+  
+  // Event listener para guardar noticia
+  const formGuardarNoticia = document.getElementById('form-guardar-noticia');
+  if (formGuardarNoticia) {
+    formGuardarNoticia.addEventListener('submit', guardarNoticia);
+  }
 });
 
 // Verificar si el usuario está autenticado
@@ -137,11 +176,26 @@ async function cargarNoticias() {
             <p>${escapeHTML(noticia.resumen).substring(0, 150)}...</p>
           </div>
           <div class="admin-item-actions">
-            <button class="btn btn-small" onclick="editarNoticia(${noticia.id})">Editar</button>
-            <button class="btn btn-small btn-danger" onclick="eliminarNoticia(${noticia.id})">Eliminar</button>
+            <button class="btn btn-small" data-action="editar-noticia" data-id="${noticia.id}">Editar</button>
+            <button class="btn btn-small btn-danger" data-action="eliminar-noticia" data-id="${noticia.id}">Eliminar</button>
           </div>
         </div>
       `).join('');
+      
+      // Event listeners para botones de noticia
+      document.querySelectorAll('[data-action="editar-noticia"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          if (id) editarNoticia(id);
+        });
+      });
+      
+      document.querySelectorAll('[data-action="eliminar-noticia"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          if (id) eliminarNoticia(id);
+        });
+      });
     } else {
       lista.innerHTML = '<p class="text-center">No hay noticias. Crea la primera.</p>';
     }
@@ -290,11 +344,26 @@ async function cargarHilosModeracion() {
           </div>
           <div class="admin-item-actions">
             <a href="/hilo/${hilo.id}" class="btn btn-small" target="_blank">Ver</a>
-            ${!hilo.archivado ? `<button class="btn btn-small" onclick="archivarHilo(${hilo.id})">Archivar</button>` : ''}
-            <button class="btn btn-small btn-danger" onclick="eliminarHilo(${hilo.id})">Eliminar</button>
+            ${!hilo.archivado ? `<button class="btn btn-small" data-action="archivar-hilo" data-id="${hilo.id}">Archivar</button>` : ''}
+            <button class="btn btn-small btn-danger" data-action="eliminar-hilo" data-id="${hilo.id}">Eliminar</button>
           </div>
         </div>
       `).join('');
+      
+      // Event listeners para botones de hilos
+      document.querySelectorAll('[data-action="archivar-hilo"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          if (id) archivarHilo(id);
+        });
+      });
+      
+      document.querySelectorAll('[data-action="eliminar-hilo"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          if (id) eliminarHilo(id);
+        });
+      });
     } else {
       lista.innerHTML = '<p class="text-center">No hay hilos en el foro</p>';
     }

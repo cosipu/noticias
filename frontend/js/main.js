@@ -206,6 +206,15 @@ function toggleDarkMode() {
 document.addEventListener('DOMContentLoaded', () => {
   initDarkMode();
   
+  // Event listener para modo oscuro
+  const toggleDarkModeBtn = document.getElementById('toggle-dark-mode');
+  if (toggleDarkModeBtn) {
+    toggleDarkModeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleDarkMode();
+    });
+  }
+  
   // Cargar contenido de la home si estamos en ella
   if (document.getElementById('news-grid')) {
     loadHeroNews();      // Cargar noticia principal
