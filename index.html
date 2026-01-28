@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" id="meta-description" content="Noticia de política">
-  <title id="page-title">Noticia - Noticias Política</title>
-  <link rel="stylesheet" href="/css/styles.css">
+  <meta name="description" content="Medio informativo enfocado en el gobierno entrante">
+  <title>Noticias - Contador Gobierno</title>
+  <link rel="stylesheet" href="frontend/css/styles.css">
 </head>
 <body>
   <header>
@@ -16,23 +16,131 @@
       </h1>
       <nav>
         <ul>
-          <li><a href="/">Inicio</a></li>
-          <li><a href="/noticias">Noticias</a></li>
-          <li><a href="/foro">Comunidad</a></li>
-          <li><a href="/admin">Admin</a></li>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="frontend/noticias.html">Noticias</a></li>
+          <li><a href="frontend/foro.html">Comunidad</a></li>
+          <li><a href="frontend/admin.html">Admin</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
+  <!-- SECCIÓN CONTADOR -->
+  <section class="countdown-section">
+    <div class="container">
+      <div class="countdown-label phase-1" id="countdown-phase-label">
+        FASE 1: CUENTA REGRESIVA HASTA EL 11 DE MARZO
+      </div>
+      
+      <div class="countdown" id="countdown">
+        <div class="countdown-item">
+          <span class="countdown-value" id="item-1">0</span>
+          <span class="countdown-unit" id="unit-1">Días</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="item-2">0</span>
+          <span class="countdown-unit" id="unit-2">Horas</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="item-3">0</span>
+          <span class="countdown-unit" id="unit-3">Minutos</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="item-4">0</span>
+          <span class="countdown-unit" id="unit-4">Segundos</span>
+        </div>
+      </div>
+      
+      <div class="countdown-info" id="countdown-info" style="text-align: center;">
+        Tiempo hasta el 11 de marzo de 2026
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN HERO (NOTICIA PRINCIPAL) -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-image-container">
+        <img class="hero-image" id="hero-image" src="frontend/images/placeholder.svg" alt="Noticia principal">
+      </div>
+      <div class="hero-content">
+        <span class="hero-badge" id="hero-category">POLÍTICA</span>
+        <h2 id="hero-title">Cargando noticia principal...</h2>
+        <p class="hero-bajada" id="hero-excerpt">Espera mientras se carga el contenido...</p>
+        <div class="hero-meta">
+          <span><strong>Fecha:</strong> <span id="hero-date">--/--/--</span></span>
+          <span id="hero-author" style="display:none;"><strong>Por:</strong> <span id="hero-author-name">Reportero</span></span>
+        </div>
+        <a href="#" id="hero-link" class="btn mt-3">Leer más →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENIDO PRINCIPAL CON SIDEBAR -->
   <main>
     <div class="container">
-      <a href="/noticias" class="btn">← Volver a noticias</a>
-      
-      <div id="loading" class="loading">Cargando noticia...</div>
-      <div id="error" class="error" style="display: none;"></div>
-      
-      <article id="noticia-container" class="article-page"></article>
+      <div class="main-content">
+        
+        <!-- Grid de noticias secundarias -->
+        <div>
+          <h2 style="font-size: 1.8rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 0.5px;">
+            Noticias Recientes
+          </h2>
+          
+          <div id="loading" class="loading">Cargando noticias...</div>
+          <div id="error" class="error" style="display: none;"></div>
+          
+          <div class="news-grid" id="news-grid"></div>
+          
+          <div class="text-center mt-3">
+            <a href="frontend/noticias.html" class="btn">Ver todas las noticias →</a>
+          </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+          <!-- Widget: Categorías -->
+          <div class="sidebar-widget">
+            <h3>Categorías</h3>
+            <ul>
+              <li><a href="frontend/noticias.html?cat=politica">📍 Política</a></li>
+              <li><a href="frontend/noticias.html?cat=economia">💰 Economía</a></li>
+              <li><a href="frontend/noticias.html?cat=sociedad">👥 Sociedad</a></li>
+              <li><a href="frontend/noticias.html?cat=seguridad">🔒 Seguridad</a></li>
+              <li><a href="frontend/noticias.html?cat=cultura">🎭 Cultura</a></li>
+            </ul>
+          </div>
+
+          <!-- Widget: Estadísticas -->
+          <div class="sidebar-widget">
+            <h3>En vivo</h3>
+            <ul>
+              <li>📊 <strong id="news-count">0</strong> noticias publicadas</li>
+              <li>💬 <strong id="comment-count">0</strong> comentarios</li>
+              <li>👥 <strong id="user-count">1</strong> usuario activo</li>
+            </ul>
+          </div>
+
+          <!-- Widget: Más recientes -->
+          <div class="sidebar-widget">
+            <h3>Trending</h3>
+            <ul id="trending-list">
+              <li><a href="#">Cargando trending...</a></li>
+            </ul>
+          </div>
+
+          <!-- Widget: Foro -->
+          <div class="sidebar-widget">
+            <h3>Ir a</h3>
+            <ul>
+              <li><a href="frontend/foro.html">💬 Foro de comentarios</a></li>
+              <li><a href="frontend/admin.html">⚙️ Área administrativa</a></li>
+              <li><a href="#" id="toggle-dark-mode">🌙 Modo oscuro</a></li>
+            </ul>
+          </div>
+        </aside>
+
+      </div>
     </div>
   </main>
 
@@ -43,6 +151,7 @@
         <ul>
           <li><a href="#acerca">¿Quiénes somos?</a></li>
           <li><a href="#mision">Nuestra misión</a></li>
+          <li><a href="#historia">Historia</a></li>
         </ul>
       </div>
       <div>
@@ -50,13 +159,15 @@
         <ul>
           <li><a href="mailto:info@noticias.local">info@noticias.local</a></li>
           <li><a href="#">Redes sociales</a></li>
+          <li><a href="#">Publicidad</a></li>
         </ul>
       </div>
       <div>
         <h3>Sitio</h3>
         <ul>
-          <li><a href="/noticias">Archivo</a></li>
-          <li><a href="/foro">Comunidad</a></li>
+          <li><a href="frontend/noticias.html">Archivo</a></li>
+          <li><a href="frontend/foro.html">Comunidad</a></li>
+          <li><a href="#">Política de privacidad</a></li>
         </ul>
       </div>
       <div class="footer-bottom">
@@ -65,7 +176,7 @@
     </div>
   </footer>
 
-  <script src="/js/main.js"></script>
-  <script src="/js/noticia.js"></script>
+  <script src="frontend/js/countdown.js"></script>
+  <script src="frontend/js/main.js"></script>
 </body>
 </html>
